@@ -1,0 +1,85 @@
+/**
+ *
+ * @author Katarine
+ */
+public class ULA {
+    private int operador1;
+    private int instrucao;
+    private int operador2;
+    private int pc = 1;
+
+    public ULA() {
+        operador1 = 0;
+        instrucao = 0;
+        operador2 = 0;
+    }
+    
+    void ula(int operador1, int operador2, int inst){
+            int result;
+        switch(inst){
+            case 0b100:
+                result = operador1 + operador2;
+                System.out.println("Resultado da instrução Add: "+result);
+                inst+=pc;
+                ula(operador1,operador2,inst);
+                break;
+            case 0b011:
+                result = operador1 - operador2;
+                System.out.println("Resultado da instrução Sub: "+result);
+                inst+=pc;
+                ula(operador1,operador2,inst);
+                break;
+            case 0b010:
+                result= operador1 * operador2;
+                System.out.println("Resultado da instrução Mult: "+result);
+                inst+=pc;
+                ula(operador1,operador2,inst);
+                break;
+            case 0b101:
+                System.out.println("Salto para instrução 3");
+                pc += 2;
+                inst=pc;
+               ula(operador1,operador2,inst);
+                break;
+            default:
+                //System.out.println("Nenhuma instrução reconhecida"); 
+        }
+        
+    }
+}
+
+public class Trab04 {
+    /**
+     * @param args the command line arguments
+     */
+   static void decodificador(int palavra){
+       ULA ula = new ULA();
+        int instrucao = 0b1110000000000;
+        int operador1 = 0b0001111100000;
+        int operador2 = 0b0000000011111;
+        
+        instrucao =  instrucao & palavra ;
+        instrucao = instrucao>>10;
+        operador1 = operador1 & palavra;
+        operador1 = operador1>>5;
+        operador2 = (operador2 & palavra);
+        
+
+        System.out.println("Palavra em Binário: "+Integer.toBinaryString(palavra));
+        System.out.println("Instrução: "+ Integer.toBinaryString(instrucao));
+        System.out.println("Operador 1: "+ operador1);
+        System.out.println("Operador 2: "+ operador2);
+
+        
+        ula.ula(operador1, operador2, instrucao);
+        
+    }
+    public static void main(String[] args) {
+        // TODO code application logic here
+        
+        int palavra = 0b0100010000010;
+        decodificador(palavra);
+        
+       
+    }
+}
